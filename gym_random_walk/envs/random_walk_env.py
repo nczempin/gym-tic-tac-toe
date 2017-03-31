@@ -8,14 +8,24 @@ class RandomWalkEnv(gym.Env):
 
   def __init__(self):
     self.action_space = spaces.Discrete(2)
-    print("init")
+    #print("init")
   def _step(self, action):
-    print("step")
+    #print("step")
     reward = 0
     done = False
+    if (action == 0):
+       self.state -= 1
+    if (action == 1):
+        self.state += 1
+    if (self.state >= 6):
+        reward = 1
+        done = True
+    if (self.state <= 0):
+        done = True
     return np.array(self.state), reward, done, {}
   def _reset(self):
-    print("reset")
-    self.state = 0 # TODO start in a random position
+    #print("reset")
+    self.state = 1 # TODO start in a random position
   def _render(self, mode='human', close=False):
-    print("render")
+    #print("render")
+    print(self.state)
