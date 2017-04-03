@@ -1,8 +1,8 @@
 import gym
 import numpy as np
-import gym_random_walk
+import gym_tic_tac_toe
 
-env = gym.make('random_walk-v0')
+env = gym.make('tic_tac_toe-v0')
 
 num_episodes = 20
 num_steps_per_episode = 200
@@ -10,14 +10,21 @@ num_steps_per_episode = 200
 collected_rewards = []
 for i in range(num_episodes):
     s = env.reset()
+    print (s)
     print ("starting new episode")
     env.render()
     print ("started")
     total_reward = 0
     done = False
+    om = 1
     for j in range(num_steps_per_episode):
-        a = np.random.randint(env.action_space.n)
+        a = env.action_space.sample()
+        print (a[0])
+        #sm = s['on_move']
+        #print (sm)
+        a = tuple((om, a[1]))
         s1, reward, done, _ = env.step(a)
+        om = -om
         env.render()
         total_reward += reward
         s = s1

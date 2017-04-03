@@ -1,0 +1,64 @@
+import gym
+from gym import spaces
+import numpy as np
+
+class TicTacToeEnv(gym.Env):
+    metadata = {'render.modes': ['human']}
+
+    def __init__(self):
+        self.action_space = spaces.Tuple((spaces.Discrete(2), spaces.Discrete(9)))
+        self.observation_space = spaces.Discrete(3)#Tuple(spaces.Discrete(3), spaces.Discrete(9))
+    def _step(self, action):
+        done = False
+        reward = 0
+
+        p, square = action
+        
+       # p = p*2 - 1
+        # check move legality
+        proposed = self.state['board'][square]
+        om = self.state['on_move']
+        print ("on move: ", om)
+        if (proposed != 0): # wrong player, not empty
+            print("illegal move ", action, ". (square occupied): ", square)
+            done = True
+            reward = -om # player who did NOT make the illegal move
+        if (p != om): # wrong player, not empty
+            print("illegal move  ", action, " not on move: ", p)
+            done = True
+            reward = -om # player who did NOT make the illegal move
+        else:
+            self.state['board'][square] = p
+            self.state['on_move'] = -p
+
+        # check game over
+        for i in range(3):
+            if (self.state['board'][i * 3] == p and self.state['board'][i*3 + 1] == p and self.state['board'][i*3+2] == 2):
+                reward = p
+                done = True
+                break
+            #TODO other cases
+                
+        return np.array(self.state), reward, done, {}
+    def _reset(self):
+        self.state = {}
+        self.state['board'] = [0,0,0,0,0,0,0,0,0]
+        self.state['on_move'] = 1
+        return self.state
+    def _render(self, mode='human', close=False):
+        if close:
+            return
+        print("on move: " , self.state['on_move'])
+        for i in range (9):
+            print (self.state['board'][i], end=" ")
+        print()
+    def move_generator(self):
+        moves = []
+        for i in range (9):
+            if (self.state.state['board'][i]== 0):
+                p = self.state.on_move
+                if (p == 2):
+                    p = -1
+                m = [p, i]
+                moves.append(m)
+                
