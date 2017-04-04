@@ -1,6 +1,7 @@
 import gym
 import numpy as np
 import gym_tic_tac_toe
+import random
 
 env = gym.make('tic_tac_toe-v0')
 
@@ -18,12 +19,18 @@ for i in range(num_episodes):
     done = False
     om = 1
     for j in range(num_steps_per_episode):
+        moves = env.move_generator()
+        print ("moves: ", moves)
+        if (not moves):
+            break
+        m = random.choice(moves)
+        print ("m: ", m)
         a = env.action_space.sample()
         print (a[0])
         #sm = s['on_move']
         #print (sm)
         a = tuple((om, a[1]))
-        s1, reward, done, _ = env.step(a)
+        s1, reward, done, _ = env.step(m)
         om = -om
         env.render()
         total_reward += reward
