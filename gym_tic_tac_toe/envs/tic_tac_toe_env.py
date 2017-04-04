@@ -7,7 +7,7 @@ class TicTacToeEnv(gym.Env):
 
     def __init__(self):
         self.action_space = spaces.Tuple((spaces.Discrete(2), spaces.Discrete(9)))
-        self.observation_space = spaces.Discrete(3)#Tuple(spaces.Discrete(3), spaces.Discrete(9))
+        self.observation_space = spaces.Discrete(3)  # Tuple(spaces.Discrete(3), spaces.Discrete(9))
     def _step(self, action):
         done = False
         reward = 0
@@ -16,33 +16,34 @@ class TicTacToeEnv(gym.Env):
         
        # p = p*2 - 1
         # check move legality
-        proposed = self.state['board'][square]
+        board = self.state['board']
+        proposed = board[square]
         om = self.state['on_move']
-        print ("on move: ", om)
-        if (proposed != 0): # wrong player, not empty
+        if (proposed != 0):  # wrong player, not empty
             print("illegal move ", action, ". (square occupied): ", square)
             done = True
-            reward = -2 * om # player who did NOT make the illegal move
-        if (p != om): # wrong player, not empty
+            reward = -2 * om  # player who did NOT make the illegal move
+        if (p != om):  # wrong player, not empty
             print("illegal move  ", action, " not on move: ", p)
             done = True
-            reward = -2 * om # player who did NOT make the illegal move
+            reward = -2 * om  # player who did NOT make the illegal move
         else:
-            self.state['board'][square] = p
+            board[square] = p
             self.state['on_move'] = -p
 
         # check game over
         for i in range(3):
-            if (self.state['board'][i * 3] == p and self.state['board'][i*3 + 1] == p and self.state['board'][i*3+2] == 2):
+            # horizontals and verticals
+            if ((board[i * 3] == p and board[i * 3 + 1] == p and board[i * 3 + 2 ] == p)
+                or (board[i + 0] == p and board[i + 3] == p and board[i + 6] == p)):
                 reward = p
                 done = True
                 break
-            #TODO other cases
                 
         return np.array(self.state), reward, done, {}
     def _reset(self):
         self.state = {}
-        self.state['board'] = [0,0,0,0,0,0,0,0,0]
+        self.state['board'] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.state['on_move'] = 1
         return self.state
     def _render(self, mode='human', close=False):
@@ -56,7 +57,7 @@ class TicTacToeEnv(gym.Env):
         moves = []
         for i in range (9):
             
-            if (self.state['board'][i]== 0):
+            if (self.state['board'][i] == 0):
                 p = self.state['on_move']
                 m = [p, i]
                 moves.append(m)
