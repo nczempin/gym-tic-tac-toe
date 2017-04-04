@@ -6,8 +6,8 @@ class TicTacToeEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):
-        self.action_space = spaces.Tuple((spaces.Discrete(2), spaces.Discrete(9)))
-        self.observation_space = spaces.Discrete(3)  # Tuple(spaces.Discrete(3), spaces.Discrete(9))
+        self.action_space = spaces.Discrete(9)
+        self.observation_space = spaces.Discrete(9 * 3) # flattened
     def _step(self, action):
         done = False
         reward = 0
@@ -53,6 +53,27 @@ class TicTacToeEnv(gym.Env):
         for i in range (9):
             print (self.state['board'][i], end=" ")
         print()
+    def hash_ttt(state):
+        #of course this is just for the upper bound;
+        #we should really take advantage of the redundancies
+        # to reduce the number of states to 765 for the board
+        # and who is on move really is implicit in how many
+        # squares are occupied
+        retval = 0
+        low9 = 0
+        high9 = 0
+        lowmult = 2
+        highmult = 1024
+        board = state['board']
+        if (state['on_move'] == -1):
+            retval = 1
+        for i in range(9):
+            if (board[i] != 0):
+                retval += lowmult #todo bitwise logic in python how?
+                if (board[i] < 0):
+                    retval += highmult
+            lowmult *=2
+            highmult *= 2
     def move_generator(self):
         moves = []
         for i in range (9):
