@@ -22,11 +22,11 @@ class TicTacToeEnv(gym.Env):
         if (proposed != 0): # wrong player, not empty
             print("illegal move ", action, ". (square occupied): ", square)
             done = True
-            reward = -om # player who did NOT make the illegal move
+            reward = -2 * om # player who did NOT make the illegal move
         if (p != om): # wrong player, not empty
             print("illegal move  ", action, " not on move: ", p)
             done = True
-            reward = -om # player who did NOT make the illegal move
+            reward = -2 * om # player who did NOT make the illegal move
         else:
             self.state['board'][square] = p
             self.state['on_move'] = -p
@@ -57,8 +57,6 @@ class TicTacToeEnv(gym.Env):
         for i in range (9):
             if (self.state.state['board'][i]== 0):
                 p = self.state.on_move
-                if (p == 2):
-                    p = -1
                 m = [p, i]
                 moves.append(m)
                 
