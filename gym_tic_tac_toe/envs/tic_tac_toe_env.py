@@ -55,8 +55,8 @@ class TicTacToeEnv(gym.Env):
     def move_generator(self):
         moves = []
         for i in range (9):
-            if (self.state.state['board'][i]== 0):
-                p = self.state.on_move
+            if (self.state['board'][i]== 0):
+                p = self.state['on_move']
                 m = [p, i]
                 moves.append(m)
                 
