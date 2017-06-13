@@ -34,11 +34,16 @@ class TicTacToeEnv(gym.Env):
         # check game over
         for i in range(3):
             # horizontals and verticals
-            if ((board[i * 3] == p and board[i * 3 + 1] == p and board[i * 3 + 2 ] == p)
+            if ((board[i * 3] == p and board[i * 3 + 1] == p and board[i * 3 + 2] == p)
                 or (board[i + 0] == p and board[i + 3] == p and board[i + 6] == p)):
                 reward = p
                 done = True
                 break
+        # diagonals
+        if((board[0] == p and board[4] == p and board[8] == p)
+            or (board[2] == p and board[4] == p and board[6] == p)):
+                reward = p
+                done = True
                 
         return self.state, reward, done, {}
     def _reset(self):
