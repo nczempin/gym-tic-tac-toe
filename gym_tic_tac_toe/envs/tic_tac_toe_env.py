@@ -8,7 +8,7 @@ class TicTacToeEnv(gym.Env):
     def __init__(self):
         self.action_space = spaces.Discrete(9)
         self.observation_space = spaces.Discrete(512*512*2) # flattened
-    def _step(self, action):
+    def step(self, action):
         done = False
         reward = 0
 
@@ -46,12 +46,12 @@ class TicTacToeEnv(gym.Env):
                 done = True
                 
         return self.state, reward, done, {}
-    def _reset(self):
+    def reset(self):
         self.state = {}
         self.state['board'] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.state['on_move'] = 1
         return self.state
-    def _render(self, mode='human', close=False):
+    def render(self, mode='human', close=False):
         if close:
             return
         print("on move: " , self.state['on_move'])
