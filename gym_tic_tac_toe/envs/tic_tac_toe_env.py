@@ -4,17 +4,18 @@ import numpy as np
 
 class TicTacToeEnv(gym.Env):
     metadata = {'render.modes': ['human']}
+    
+    symbols = ['O', ' ', 'X'];
 
     def __init__(self):
         self.action_space = spaces.Discrete(9)
-        self.observation_space = spaces.Discrete(512*512*2) # flattened
+        self.observation_space = spaces.Discrete(9*3*2) # flattened
     def step(self, action):
         done = False
         reward = 0
 
         p, square = action
         
-       # p = p*2 - 1
         # check move legality
         board = self.state['board']
         proposed = board[square]
@@ -54,14 +55,14 @@ class TicTacToeEnv(gym.Env):
     def render(self, mode='human', close=False):
         if close:
             return
-        print("on move: " , self.state['on_move'])
+        print("on move: " , self.symbols[self.state['on_move']+1])
         for i in range (9):
-            print (self.state['board'][i], end=" ")
-        print()
+            print (self.symbols[self.state['board'][i]+1], end=" ");
+            if ((i % 3) == 2):
+                print();
     def move_generator(self):
         moves = []
         for i in range (9):
-            
             if (self.state['board'][i] == 0):
                 p = self.state['on_move']
                 m = [p, i]
